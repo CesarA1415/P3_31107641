@@ -1,3 +1,6 @@
+// Cargar variables de entorno lo antes posible
+require('dotenv').config();
+
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -112,4 +115,14 @@ app.get('/ping', (req, res, next) => {
     res.status(200).end(); // .end() envía una respuesta sin datos
 });
 
+// Iniciar el servidor si este archivo se ejecuta directamente (por ejemplo en Render)
+const PORT = process.env.PORT || 3000;
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
+  });
+}
+
+// Exportar la app para pruebas u otros usos (no impedirá que el servidor se inicie cuando
+// el archivo se ejecute directamente gracias al chequeo anterior).
 module.exports = app;
