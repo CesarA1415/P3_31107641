@@ -7,9 +7,7 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
 var indexRouter = require('./routes/index');
-// 1. Importar las rutas:
-var authRouter = require('./routes/auth'); // O la ruta correcta
-var usersRouter = require('./routes/users'); // O la ruta correcta
+// Lógica de rutas movida desde routes/auth.js y routes/users.js directamente a app.js
 
 const swaggerOptions = {
   definition: {
@@ -42,9 +40,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 app.use('/', indexRouter);
-// 2. Usar las rutas:
-app.use('/auth', authRouter); // Esta línea es CLAVE
-app.use('/users', usersRouter); // Esta línea es CLAVE
+// 2. Usar las rutas directamente en app.js (antes estaban en /routes)
+// POST /auth/login  (movido desde routes/auth.js)
+app.post('/auth/login', function(req, res, next) {
+  res.status(200).json({ message: 'login placeholder' });
+});
+
+// GET /users  (movido desde routes/users.js)
+app.get('/users', function(req, res, next) {
+  res.send('respond with a resource');
+});
 
 // Middleware para el endpoint /about
 /**
