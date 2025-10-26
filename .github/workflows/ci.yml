@@ -1,0 +1,32 @@
+name: CI - Pruebas y Construcción
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Usar Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Instalación limpia de dependencias
+        run: npm install
+
+      - name: Ejecutar pruebas
+        # Usamos 'npm run test' con el prefijo '.' para forzar a NPM a buscar el script en el directorio actual.
+        # Esto soluciona problemas de permisos en muchos entornos de CI.
+        run: npm run test --prefix .
